@@ -1,8 +1,12 @@
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+
+import { getFilteredContacts } from 'redux/contacts/contacts-selectors';
 
 import ContactListItem from './ContactListItem/ContactListItem';
 
-const ContactList = ({ contacts, removeContact }) => {
+const ContactList = () => {
+  const contacts = useSelector(getFilteredContacts);
+
   const contactsItem = contacts.map(({ id, name, number }) => (
     <ContactListItem
       key={id}
@@ -10,20 +14,8 @@ const ContactList = ({ contacts, removeContact }) => {
       name={name}
       number={number}
       type="button"
-      removeContact={removeContact}
     />
   ));
   return <ul>{contactsItem}</ul>;
 };
 export default ContactList;
-
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    }).isRequired
-  ),
-  removeContact: PropTypes.func.isRequired,
-};
