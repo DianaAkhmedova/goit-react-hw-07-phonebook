@@ -1,15 +1,31 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { getAllContacts } from 'redux/contacts/contacts-selectors';
+import { addContact } from 'redux/contacts/contacts-slice';
 
 import { Form, FormLabel, FormInput, AddBtn } from './ContactForm.styled';
 
-const ContactForm = ({ addContact }) => {
+const ContactForm = () => {
   const [state, setState] = useState({
     name: '',
     number: '',
   });
 
   const { name, number } = state;
+  const contacts = useSelector(getAllContacts);
+  const dispatch = useDispatch();
+
+  const handleAddContact = contact => {
+    const isContainsContact = contacts.some(
+      ({ name }) => name.toLowerCase() === contact.name.toLowerCase()
+    );
+
+    if (isContainsContact)
+      return alert(`${contact.name} is already in contacts`);
+
+    dispatch(addContact(contact));
+  };
 
   const handleChange = ({ currentTarget }) => {
     const { name, value } = currentTarget;
@@ -21,7 +37,7 @@ const ContactForm = ({ addContact }) => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    addContact({ ...state });
+    handleAddContact({ ...state });
     setState({ name: '', number: '' });
   };
 
@@ -60,7 +76,3 @@ const ContactForm = ({ addContact }) => {
   );
 };
 export default ContactForm;
-
-ContactForm.propTypes = {
-  addContact: PropTypes.func.isRequired,
-};
