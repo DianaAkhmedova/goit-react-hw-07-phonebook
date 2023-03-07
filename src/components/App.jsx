@@ -1,10 +1,12 @@
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import ContactForm from './ContactForm/ContactForm';
 import Filter from './Filter/Filter';
 import ContactList from './ContactList/ContactList';
 
 import { getFilteredContacts } from '../redux/contacts/contacts-selectors';
+import { fetchContacts } from 'redux/contacts/contacts-operations';
 
 import {
   PhonebookContainer,
@@ -14,6 +16,11 @@ import {
 
 const App = () => {
   const filteredContacts = useSelector(getFilteredContacts);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <PhonebookContainer>
